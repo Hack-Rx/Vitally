@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vitally/GoalPage2.dart';
-import 'pagetransition.dart';
-import 'constants.dart';
-import 'GoalPage2.dart';
-import 'finalOnboarding.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
+import 'package:vitally/constants.dart';
+import 'package:vitally/userRegistration/finalOnboarding.dart';
+import 'package:vitally/userRegistration/GoalPage2.dart';
 
 class Registration2 extends StatefulWidget {
   @override
@@ -66,7 +65,7 @@ class _Registration2State extends State<Registration2> {
                 SizedBox(
                     height: phoneHeight / 6.77,
                     width: phoneWidth / 3.41,
-                    child: Image.asset('assets/3.png')),
+                    child: Image.asset('assets/yoga.png')),
               ],
             ),
             Padding(

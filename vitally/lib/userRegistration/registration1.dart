@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:vitally/onboarding.dart';
-import 'registration2.dart';
-import 'pagetransition.dart';
+import 'package:vitally/onBoarding/onboarding.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'userdataformservice.dart';
-import 'gettoknowyourself.dart';
-import 'login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vitally/firebaseDataService/userdataformservice.dart';
+import 'package:vitally/userRegistration/gettoknowyourself.dart';
 
 //TODO: Gender Switch, Daily activity and storing this data to the cloud upon submitting so this data would be available in next pages
 
@@ -82,7 +79,6 @@ class _HelpUsFormState extends State<HelpUsForm> {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 'Help us know you better',
-                //style: titletxt,
               ),
             ),
           ),

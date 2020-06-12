@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vitally/dummyref.dart';
-import 'package:vitally/onboarding.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'pagetransition.dart';
-import 'constants.dart';
-import 'registration2.dart';
-import 'registration1.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
+import 'package:vitally/constants.dart';
+import 'package:vitally/firebaseDataService/userdataformservice.dart';
 
 const headertext = TextStyle(
     fontSize: 16,
@@ -42,6 +40,20 @@ class LastOnboarding extends StatefulWidget {
 
 class _LastOnboardingState extends State<LastOnboarding> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
+  final _auth = FirebaseAuth.instance;
+  FirebaseUser registereduser;
+
+  void getCurrentUser() async {
+    final user = await _auth.currentUser();
+    registereduser = user;
+  }
+
   Widget build(BuildContext context) {
     final phoneWidth = MediaQuery.of(context).size.width;
     final phoneHeight = MediaQuery.of(context).size.height;
@@ -86,7 +98,7 @@ class _LastOnboardingState extends State<LastOnboarding> {
                   SizedBox(
                       height: phoneHeight / 6.77,
                       width: phoneWidth / 3.409,
-                      child: Image.asset('assets/3.png')),
+                      child: Image.asset('assets/jogging.png')),
                 ],
               ),
               Padding(
@@ -108,7 +120,9 @@ class _LastOnboardingState extends State<LastOnboarding> {
                               Text('Daily Calorie Requirement',
                                   style: headertext),
                               Text(
-                                widget.dailyCalorieRequirement.toString(),
+                                widget.dailyCalorieRequirement
+                                        .toStringAsPrecision(6) +
+                                    ' kCal',
                                 style: NumberText,
                               )
                             ],
@@ -172,7 +186,7 @@ class _LastOnboardingState extends State<LastOnboarding> {
                                   widget.bmiGoal == 0
                                       ? 'Be Healthier'
                                       : widget.bmiGoal.toStringAsPrecision(2) +
-                                          ' kg/m',
+                                          ' kg/m\u00b2',
                                   style: NumberText,
                                 )
                               ],
@@ -197,13 +211,21 @@ class _LastOnboardingState extends State<LastOnboarding> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                onPressed: () {
-                  print('object');
-                  Navigator.push(
-                    context,
-                    EnterExitRoute(
-                        enterPage: DummyPage(), exitPage: LastOnboarding()),
-                  );
+                onPressed: () async {
+                  try {
+                    await userDataHelpUsForm(uid: registereduser.uid)
+                        .updatetargetData(
+                            widget.dailyCalorieRequirement.toInt(),
+                            widget.bmiGoal,
+                            widget.weeklygoal.toStringAsPrecision(2))
+                        .whenComplete(() => Navigator.push(
+                              context,
+                              EnterExitRoute(
+                                  enterPage: null, exitPage: LastOnboarding()),
+                            ));
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 height: phoneHeight / 13.54,
                 minWidth: phoneWidth / 1.205,

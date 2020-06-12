@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vitally/onboarding.dart';
+import 'package:vitally/firebaseDataService/userdataformservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'pagetransition.dart';
-import 'constants.dart';
-import 'registration2.dart';
-import 'registration1.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
+import 'package:vitally/constants.dart';
+import 'package:vitally/userRegistration/registration2.dart';
 
 const headertext = TextStyle(
     fontSize: 25,
@@ -40,6 +38,20 @@ class GetTOKnowYourself extends StatefulWidget {
 
 class _GetTOKnowYourselfState extends State<GetTOKnowYourself> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
+  final _auth = FirebaseAuth.instance;
+  FirebaseUser registereduser;
+
+  void getCurrentUser() async {
+    final user = await _auth.currentUser();
+    registereduser = user;
+  }
+
   double bmi(double a, double b) {
     double calc = (a / ((b / 100) * (b / 100)));
     double calc_ = num.parse(calc.toStringAsFixed(1));
@@ -172,7 +184,7 @@ class _GetTOKnowYourselfState extends State<GetTOKnowYourself> {
                 SizedBox(
                     height: phoneHeight / 6.77,
                     width: phoneWidth / 3.4,
-                    child: Image.asset('assets/3.png')),
+                    child: Image.asset('assets/asset1.png')),
               ],
             ),
             Padding(
@@ -253,18 +265,25 @@ class _GetTOKnowYourselfState extends State<GetTOKnowYourself> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              onPressed: () {
+              onPressed: () async {
                 print('object');
-                Navigator.push(
-                  context,
-                  EnterExitRoute(
-                      enterPage: Registration2(
-                        height: widget.height,
-                        dailycalorierequirement1: dailcal(),
-                        weight: widget.weight,
-                      ),
-                      exitPage: GetTOKnowYourself()),
-                );
+                try {
+                  await userDataHelpUsForm(uid: registereduser.uid)
+                      .updateInitialBMI(bmi(widget.weight, widget.height),
+                          idealBodyWeight(widget.gender, widget.height))
+                      .whenComplete(() => Navigator.push(
+                            context,
+                            EnterExitRoute(
+                                enterPage: Registration2(
+                                  height: widget.height,
+                                  dailycalorierequirement1: dailcal(),
+                                  weight: widget.weight,
+                                ),
+                                exitPage: GetTOKnowYourself()),
+                          ));
+                } catch (e) {
+                  print(e);
+                }
               },
               height: phoneHeight / 13.53,
               minWidth: phoneWidth / 1.205,

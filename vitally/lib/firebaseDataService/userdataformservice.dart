@@ -6,13 +6,31 @@ class userDataHelpUsForm {
   userDataHelpUsForm({this.uid});
   final CollectionReference helpusform = Firestore.instance.collection('users');
   final CollectionReference goal2 = Firestore.instance.collection('goal');
+  final CollectionReference yourcalorieGoal =
+      Firestore.instance.collection('YourCalorieGoal');
+  final CollectionReference initialbmi =
+      Firestore.instance.collection('initialbmi');
+
+  Future updateInitialBMI(double initialBMI, int idealWeight) async {
+    return await initialbmi.document(uid).setData(
+        {'bmi_Initial': initialBMI, 'ideal_weight_initial': idealWeight});
+  }
+
+  Future updatetargetData(
+    int dailycal,
+    double goalBMI,
+    String weeklyGain,
+  ) async {
+    return await yourcalorieGoal.document(uid).setData(
+        {'DailyCal': dailycal, 'goalBMI': goalBMI, 'weeklyGain': weeklyGain});
+  }
 
   Future updategoalData(
     double weight,
     double targetDuration,
     int goalid,
   ) async {
-    return goal2.document(uid).setData(
+    return await goal2.document(uid).setData(
         {'TargetWeight': weight, 'Duration': targetDuration, 'Goal': goalid});
   }
 

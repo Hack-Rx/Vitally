@@ -2,13 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vitally/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'pagetransition.dart';
-import 'registration1.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
 import 'package:email_validator/email_validator.dart';
 import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'registration1.dart';
+import 'package:vitally/userRegistration/registration1.dart';
 
 Future fetchStr() async {
   await new Future.delayed(Duration(seconds: 5), () {});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import 'package:vitally/Login_SignUp/login.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'pagetransition.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
 
 const bodytxt = TextStyle(
     color: Colors.white,

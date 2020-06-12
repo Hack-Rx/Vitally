@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'onboarding.dart';
-import 'login.dart';
+import 'package:vitally/onBoarding/onboarding.dart';
+import 'Login_SignUp/login.dart';
+import 'package:vitally/DashBoard/DashBoardLanding.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +32,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: (initScreen == 0 || initScreen == null)
           ? Onboarding()
-          : UserLoginPage(),
+          : LandingDashBoard(),
     );
   }
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'pagetransition.dart';
+import 'package:vitally/pageTransitions/pagetransition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'userdataformservice.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'constants.dart';
-import 'finalOnboarding.dart';
-import 'registration1.dart';
+import 'package:vitally/firebaseDataService/userdataformservice.dart';
+import 'package:vitally/constants.dart';
+import 'package:vitally/userRegistration/finalOnboarding.dart';
+import 'package:vitally/userRegistration/registration1.dart';
 
 class Registration3 extends StatefulWidget {
   final goalValue;
@@ -84,7 +83,7 @@ class _Registration3State extends State<Registration3> {
                   SizedBox(
                       height: phoneHeight / 6.77,
                       width: phoneWidth / 3.409,
-                      child: Image.asset('assets/3.png')),
+                      child: Image.asset('assets/yoga.png')),
                 ],
               ),
               Padding(
