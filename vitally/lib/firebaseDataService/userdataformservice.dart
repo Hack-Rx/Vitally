@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vitally/main.dart';
 
 class userDataHelpUsForm {
   final String uid;
@@ -12,8 +11,11 @@ class userDataHelpUsForm {
       Firestore.instance.collection('initialbmi');
 
   Future updateInitialBMI(double initialBMI, int idealWeight) async {
-    return await initialbmi.document(uid).setData(
-        {'bmi_Initial': initialBMI, 'ideal_weight_initial': idealWeight});
+    return await Firestore.instance
+        .collection(uid)
+        .document('initialBMI')
+        .setData(
+            {'bmi_Initial': initialBMI, 'ideal_weight_initial': idealWeight});
   }
 
   Future updatetargetData(
@@ -21,7 +23,7 @@ class userDataHelpUsForm {
     double goalBMI,
     String weeklyGain,
   ) async {
-    return await yourcalorieGoal.document(uid).setData(
+    return await Firestore.instance.collection(uid).document('target').setData(
         {'DailyCal': dailycal, 'goalBMI': goalBMI, 'weeklyGain': weeklyGain});
   }
 
@@ -30,7 +32,7 @@ class userDataHelpUsForm {
     double targetDuration,
     int goalid,
   ) async {
-    return await goal2.document(uid).setData(
+    return await Firestore.instance.collection(uid).document('goal').setData(
         {'TargetWeight': weight, 'Duration': targetDuration, 'Goal': goalid});
   }
 
@@ -45,7 +47,10 @@ class userDataHelpUsForm {
       String occupation,
       int daily,
       String city) async {
-    return await helpusform.document(uid).setData({
+    return await Firestore.instance
+        .collection(uid)
+        .document('userData')
+        .setData({
       'userName': name,
       'userAge': age,
       'userGender': gender,

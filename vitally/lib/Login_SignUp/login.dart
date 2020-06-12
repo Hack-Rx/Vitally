@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitally/userRegistration/registration1.dart';
+import 'package:vitally/DashBoard/DashBoardLanding.dart';
 
 Future fetchStr() async {
   await new Future.delayed(Duration(seconds: 5), () {});
@@ -19,9 +20,15 @@ class UserLoginPage extends StatefulWidget {
 }
 
 class _UserLoginPageState extends State<UserLoginPage> {
-  bool _spinner = false;
-
   final _auth = FirebaseAuth.instance;
+  FirebaseUser registereduser;
+
+  void getCurrentUser() async {
+    final user = await _auth.currentUser();
+    registereduser = user;
+  }
+
+  bool _spinner = false;
 
   final _googleSignIn = GoogleSignIn();
 
@@ -354,24 +361,39 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                 });
                                 try {
                                   signInWithGoogle()
-                                      .whenComplete(
-                                          () => print('signed in successfully'))
-                                      .whenComplete(
-                                        () => setState(() {
-                                          _spinner = false;
-                                        }),
-                                      );
+                                      .whenComplete(() => getCurrentUser())
+                                      .whenComplete(() => img == 1
+                                          ? Navigator.push(
+                                              context,
+                                              EnterExitRoute(
+                                                  enterPage: LandingDashBoard(
+                                                    uid: registereduser.uid,
+                                                  ),
+                                                  exitPage: UserLoginPage()),
+                                            )
+                                          : registereduser != null
+                                              ? Navigator.push(
+                                                  context,
+                                                  EnterExitRoute(
+                                                      enterPage: HelpUsForm(),
+                                                      exitPage:
+                                                          UserLoginPage()))
+                                              : _spinner = false);
                                 } catch (e) {
-                                  print(e);
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          content: Text(
+                                            e.message,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                      });
                                 }
-                                img == 1
-                                    ? null
-                                    : Navigator.push(
-                                        context,
-                                        EnterExitRoute(
-                                            enterPage: HelpUsForm(),
-                                            exitPage: UserLoginPage()),
-                                      );
                               },
                             ),
                           ),
@@ -395,7 +417,20 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               ),
                               onPressed: () {
                                 try {
-                                  _googleSignIn.signOut();
+//                                  _googleSignIn.signOut();
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          content: Text(
+                                            'Sign In using Google / Email',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                      });
                                 } catch (e) {
                                   print(e);
                                   print('signed out successfully');
@@ -434,21 +469,17 @@ class _UserLoginPageState extends State<UserLoginPage> {
         final user = await _auth
             .signInWithEmailAndPassword(
                 email: userEmail, password: userPassword)
+            .whenComplete(() => getCurrentUser())
             .whenComplete(() => _spinner = false);
-
         if (user != null) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  content: Text(
-                    'Welcome Back to Vitally',
-                    textAlign: TextAlign.center,
-                  ),
-                );
-              });
+          Navigator.push(
+            context,
+            EnterExitRoute(
+                enterPage: LandingDashBoard(
+                  uid: registereduser.uid,
+                ),
+                exitPage: UserLoginPage()),
+          );
           print('logged in succesfully');
         }
       } catch (e) {
@@ -476,11 +507,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         final newuser = await _auth
             .createUserWithEmailAndPassword(
                 email: userREmail, password: userRPassword)
-            .whenComplete(
-              () => setState(() {
-                _spinner = false;
-              }),
-            );
+            .whenComplete(() => _spinner = false);
 
         if (newuser != null) {
           Navigator.push(

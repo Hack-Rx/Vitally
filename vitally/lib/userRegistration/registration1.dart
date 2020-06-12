@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitally/onBoarding/onboarding.dart';
 import 'package:vitally/pageTransitions/pagetransition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,6 +61,7 @@ class _HelpUsFormState extends State<HelpUsForm> {
   String userCity;
   int userHeightUnit = 1;
   int userWeightUnit = 1;
+  bool _spinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -68,286 +70,293 @@ class _HelpUsFormState extends State<HelpUsForm> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CustomScrollView(
-        scrollDirection: Axis.vertical,
-        slivers: <Widget>[
-          SliverAppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.white,
-            pinned: true,
-            expandedHeight: phoneHeight / 9.03,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'Help us know you better',
+      body: ModalProgressHUD(
+        inAsyncCall: _spinner,
+        child: CustomScrollView(
+          scrollDirection: Axis.vertical,
+          slivers: <Widget>[
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.white,
+              pinned: true,
+              expandedHeight: phoneHeight / 9.03,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  'Help us know you better',
+                ),
               ),
             ),
-          ),
-          SliverFixedExtentList(
-            itemExtent: (MediaQuery.of(context).size.height) + 50,
-            delegate: SliverChildListDelegate(
-              [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: SizedBox(
-                    child: Form(
-                      autovalidate: _autoval,
-                      key: _formkey,
-                      child: Padding(
-                        padding: pad,
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: pad1,
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                  labelText: 'Name',
-                                  labelStyle: labeltxt,
-                                ),
-                                validator: (username) {
-                                  return username.length == 0
-                                      ? 'Name cannot be empty'
-                                      : (username.length < 6
-                                          ? 'Name must be more than 6 charecters'
-                                          : null);
-                                },
-                                onSaved: (String name) {
-                                  username = name;
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: pad1,
-                              child: DropdownButtonFormField(
-                                items: <DropdownMenuItem<int>>[
-                                  DropdownMenuItem(
-                                    child: Text('Male'),
-                                    value: 1,
+            SliverFixedExtentList(
+              itemExtent: (MediaQuery.of(context).size.height) + 50,
+              delegate: SliverChildListDelegate(
+                [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: SizedBox(
+                      child: Form(
+                        autovalidate: _autoval,
+                        key: _formkey,
+                        child: Padding(
+                          padding: pad,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: pad1,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Name',
+                                    labelStyle: labeltxt,
                                   ),
-                                  DropdownMenuItem(
-                                    child: Text('Female'),
-                                    value: 2,
+                                  validator: (username) {
+                                    return username.length == 0
+                                        ? 'Name cannot be empty'
+                                        : (username.length < 6
+                                            ? 'Name must be more than 6 charecters'
+                                            : username.length > 10
+                                                ? 'Name must be less than 10 charecters'
+                                                : null);
+                                  },
+                                  onSaved: (String name) {
+                                    username = name;
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: pad1,
+                                child: DropdownButtonFormField(
+                                  items: <DropdownMenuItem<int>>[
+                                    DropdownMenuItem(
+                                      child: Text('Male'),
+                                      value: 1,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text('Female'),
+                                      value: 2,
+                                    ),
+                                  ],
+                                  decoration: const InputDecoration(
+                                    labelText: 'Gender',
+                                    labelStyle: labeltxt,
+                                    hintText: 'Choose an option',
                                   ),
-                                ],
-                                decoration: const InputDecoration(
-                                  labelText: 'Gender',
-                                  labelStyle: labeltxt,
-                                  hintText: 'Choose an option',
+                                  onChanged: (int value) {
+                                    setState(() {
+                                      userGender = value;
+                                    });
+                                  },
                                 ),
-                                onChanged: (int value) {
-                                  setState(() {
-                                    userGender = value;
-                                  });
-                                },
                               ),
-                            ),
-                            Padding(
-                              padding: pad1,
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Age',
-                                  labelStyle: labeltxt,
+                              Padding(
+                                padding: pad1,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Age',
+                                    labelStyle: labeltxt,
+                                  ),
+                                  validator: (age) {
+                                    return age.length == 0
+                                        ? 'Invalid Age'
+                                        : null;
+                                  },
+                                  onSaved: (String age) {
+                                    userAge = int.parse(age);
+                                  },
                                 ),
-                                validator: (age) {
-                                  return age.length == 0 ? 'Invalid Age' : null;
-                                },
-                                onSaved: (String age) {
-                                  userAge = int.parse(age);
-                                },
-                              ),
-                            ), //Name
-                            //Age
-                            Padding(
-                              padding: pad1,
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Weight',
-                                  labelStyle: labeltxt,
-                                  suffix: SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: OutlineButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              Choose_2Dialog(
-                                            title: 'Choose units',
-                                            choice1: 'kg',
-                                            choice2: 'lbs',
-                                          ),
-                                        );
-                                      },
-                                      padding: EdgeInsets.all(0),
-                                      disabledBorderColor: Color(0xFF00CDAC),
-                                      child: Text(
-                                        'kg',
-                                        style: TextStyle(
-                                            color: Color(0xFF00CDAC),
-                                            fontSize: 10,
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.normal),
+                              ), //Name
+                              //Age
+                              Padding(
+                                padding: pad1,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: 'Weight',
+                                    labelStyle: labeltxt,
+                                    suffix: SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: OutlineButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                Choose_2Dialog(
+                                              title: 'Choose units',
+                                              choice1: 'kg',
+                                              choice2: 'lbs',
+                                            ),
+                                          );
+                                        },
+                                        padding: EdgeInsets.all(0),
+                                        disabledBorderColor: Color(0xFF00CDAC),
+                                        child: Text(
+                                          'kg',
+                                          style: TextStyle(
+                                              color: Color(0xFF00CDAC),
+                                              fontSize: 10,
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.normal),
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  validator: (weight) {
+                                    return weight.length == 0
+                                        ? 'Weight cannot be Zero'
+                                        : null;
+                                  },
+                                  onSaved: (String weight) {
+                                    userWeight = double.parse(weight);
+                                  },
                                 ),
-                                validator: (weight) {
-                                  return weight.length == 0
-                                      ? 'Weight cannot be Zero'
-                                      : null;
-                                },
-                                onSaved: (String weight) {
-                                  userWeight = double.parse(weight);
-                                },
-                              ),
-                            ), //weight
-                            Padding(
-                              padding: pad1,
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'cms',
-                                  labelStyle: labeltxt,
-                                  suffix: SizedBox(
-                                    height: 25,
-                                    width: 30,
-                                    child: OutlineButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              Choose_2Dialog(
-                                            title: 'Choose unit',
-                                            choice1: 'cms',
-                                            choice2: 'inches',
-                                          ),
-                                        );
-                                      },
-                                      padding: EdgeInsets.all(0),
-                                      disabledBorderColor: Color(0xFF00CDAC),
-                                      child: Text(
-                                        'cms',
-                                        style: TextStyle(
-                                            color: Color(0xFF00CDAC),
-                                            fontSize: 10,
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.normal),
+                              ), //weight
+                              Padding(
+                                padding: pad1,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: 'cms',
+                                    labelStyle: labeltxt,
+                                    suffix: SizedBox(
+                                      height: 25,
+                                      width: 30,
+                                      child: OutlineButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                Choose_2Dialog(
+                                              title: 'Choose unit',
+                                              choice1: 'cms',
+                                              choice2: 'inches',
+                                            ),
+                                          );
+                                        },
+                                        padding: EdgeInsets.all(0),
+                                        disabledBorderColor: Color(0xFF00CDAC),
+                                        child: Text(
+                                          'cms',
+                                          style: TextStyle(
+                                              color: Color(0xFF00CDAC),
+                                              fontSize: 10,
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.normal),
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  validator: (height) {
+                                    return height.length == 0
+                                        ? 'Invalid Height'
+                                        : null;
+                                  },
+                                  onSaved: (String height) {
+                                    userHeight = double.parse(height);
+                                  },
                                 ),
-                                validator: (height) {
-                                  return height.length == 0
-                                      ? 'Invalid Height'
-                                      : null;
-                                },
-                                onSaved: (String height) {
-                                  userHeight = double.parse(height);
-                                },
                               ),
-                            ),
-                            Padding(
-                              padding: pad1,
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                  labelText: 'Occupation',
-                                  labelStyle: labeltxt,
-                                ),
-                                validator: (occupation) {
-                                  return occupation.length == 0 ? null : null;
-                                },
-                                onSaved: (String occupation) {
-                                  userOccupation = occupation;
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: pad1,
-                              child: DropdownButtonFormField(
-                                items: <DropdownMenuItem<int>>[
-                                  DropdownMenuItem(
-                                    child: Text('Sedentary'),
-                                    value: 1,
+                              Padding(
+                                padding: pad1,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Occupation',
+                                    labelStyle: labeltxt,
                                   ),
-                                  DropdownMenuItem(
-                                    child: Text('Lightly Active'),
-                                    value: 2,
+                                  validator: (occupation) {
+                                    return occupation.length == 0 ? null : null;
+                                  },
+                                  onSaved: (String occupation) {
+                                    userOccupation = occupation;
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: pad1,
+                                child: DropdownButtonFormField(
+                                  items: <DropdownMenuItem<int>>[
+                                    DropdownMenuItem(
+                                      child: Text('Sedentary'),
+                                      value: 1,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text('Lightly Active'),
+                                      value: 2,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text('Moderately Active'),
+                                      value: 3,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text('Very Active'),
+                                      value: 4,
+                                    )
+                                  ],
+                                  decoration: const InputDecoration(
+                                    labelText: 'Daily Activity',
+                                    labelStyle: labeltxt,
+                                    hintText: 'Choose an option',
                                   ),
-                                  DropdownMenuItem(
-                                    child: Text('Moderately Active'),
-                                    value: 3,
+                                  onChanged: (int value) {
+                                    setState(() {
+                                      daily = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: pad1,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                    labelText: 'City',
+                                    labelStyle: labeltxt,
                                   ),
-                                  DropdownMenuItem(
-                                    child: Text('Very Active'),
-                                    value: 4,
-                                  )
-                                ],
-                                decoration: const InputDecoration(
-                                  labelText: 'Daily Activity',
-                                  labelStyle: labeltxt,
-                                  hintText: 'Choose an option',
+                                  validator: (occupation) {
+                                    return occupation.length == 0 ? null : null;
+                                  },
+                                  onSaved: (String city) {
+                                    userCity = city;
+                                  },
                                 ),
-                                onChanged: (int value) {
-                                  setState(() {
-                                    daily = value;
-                                  });
-                                },
                               ),
-                            ),
-                            Padding(
-                              padding: pad1,
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                  labelText: 'City',
-                                  labelStyle: labeltxt,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 25, 30, 30),
+                                child: MaterialButton(
+                                  child: Text(
+                                    'NEXT',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  onPressed: () {
+                                    autoval();
+                                  },
+                                  height: phoneHeight / 13.54,
+                                  minWidth: phoneWidth / 1.205,
+                                  color: Color(0xFF00CDAC),
                                 ),
-                                validator: (occupation) {
-                                  return occupation.length == 0 ? null : null;
-                                },
-                                onSaved: (String city) {
-                                  userCity = city;
-                                },
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(30, 25, 30, 30),
-                              child: MaterialButton(
-                                child: Text(
-                                  'NEXT',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                onPressed: () {
-                                  autoval();
-                                },
-                                height: phoneHeight / 13.54,
-                                minWidth: phoneWidth / 1.205,
-                                color: Color(0xFF00CDAC),
-                              ),
-                            ),
-                            //daily activity
-                            //weight
-                          ],
+                              //daily activity
+                              //weight
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -360,30 +369,32 @@ class _HelpUsFormState extends State<HelpUsForm> {
     _formkey.currentState.save();
 
     try {
-      await userDataHelpUsForm(uid: registereduser.uid).updateUserData(
-          username,
-          userAge,
-          userGender,
-          userWeight,
-          userWeightUnit,
-          userHeight,
-          userHeightUnit,
-          userOccupation,
-          daily,
-          userCity);
-
-      Navigator.push(
-        context,
-        EnterExitRoute(
-            enterPage: GetTOKnowYourself(
-              height: userHeight,
-              weight: userWeight,
-              age: userAge,
-              gender: userGender,
-              dailyactivity: daily,
-            ),
-            exitPage: HelpUsForm()),
-      );
+      _spinner = true;
+      await userDataHelpUsForm(uid: registereduser.uid)
+          .updateUserData(
+              username,
+              userAge,
+              userGender,
+              userWeight,
+              userWeightUnit,
+              userHeight,
+              userHeightUnit,
+              userOccupation,
+              daily,
+              userCity)
+          .whenComplete(() => _spinner = false)
+          .whenComplete(() => Navigator.push(
+                context,
+                EnterExitRoute(
+                    enterPage: GetTOKnowYourself(
+                      height: userHeight,
+                      weight: userWeight,
+                      age: userAge,
+                      gender: userGender,
+                      dailyactivity: daily,
+                    ),
+                    exitPage: HelpUsForm()),
+              ));
     } catch (e) {
       print(e);
     }

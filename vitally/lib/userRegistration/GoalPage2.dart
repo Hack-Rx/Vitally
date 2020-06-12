@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:vitally/pageTransitions/pagetransition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vitally/firebaseDataService/userdataformservice.dart';
@@ -38,7 +39,7 @@ class _Registration3State extends State<Registration3> {
 
   double targetWeight;
   double weeks;
-
+  bool _spinner = false;
   @override
   Widget build(BuildContext context) {
     final phoneWidth = MediaQuery.of(context).size.width;
@@ -50,174 +51,182 @@ class _Registration3State extends State<Registration3> {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(30, 100, 30, 100),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        "What's your",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Montserrat'),
-                      ),
-                      Text(
-                        'Goal?',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 55,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Montserrat'),
-                      )
-                    ],
+      body: ModalProgressHUD(
+        inAsyncCall: _spinner,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(30, 100, 30, 100),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Text(
+                          "What's your",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Montserrat'),
+                        ),
+                        Text(
+                          'Goal?',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 55,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Montserrat'),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                        height: phoneHeight / 6.77,
+                        width: phoneWidth / 3.409,
+                        child: Image.asset('assets/yoga.png')),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                        height: phoneHeight / 2.9,
+                        width: phoneWidth / 1.34,
+                        child: Form(
+                            autovalidate: _autoValidate,
+                            key: _formkeyGoal,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'Set Your Taget Weight',
+                                        labelStyle: labeltxt,
+                                        suffix: SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: OutlineButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Choose_2Dialog(
+                                                  title: 'Choose units',
+                                                  choice1: 'kg',
+                                                  choice2: 'lbs',
+                                                ),
+                                              );
+                                            },
+                                            padding: EdgeInsets.all(0),
+                                            disabledBorderColor:
+                                                Color(0xFF00CDAC),
+                                            child: Text(
+                                              'kg',
+                                              style: TextStyle(
+                                                  color: Color(0xFF00CDAC),
+                                                  fontSize: 10,
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (weight) {
+                                        return weight.length == 0
+                                            ? 'Weight cannot be Zero'
+                                            : null;
+                                      },
+                                      onSaved: (String weight) {
+                                        targetWeight = double.parse(weight);
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'Set Your Taget Duration',
+                                        labelStyle: labeltxt,
+                                        suffix: SizedBox(
+                                          height: 24,
+                                          width: 46,
+                                          child: OutlineButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Choose_2Dialog(
+                                                  title: 'Choose units',
+                                                  choice1: 'weeks',
+                                                  choice2: 'Months',
+                                                ),
+                                              );
+                                            },
+                                            padding: EdgeInsets.all(0),
+                                            disabledBorderColor:
+                                                Color(0xFF00CDAC),
+                                            child: Text(
+                                              'weeks',
+                                              style: TextStyle(
+                                                  color: Color(0xFF00CDAC),
+                                                  fontSize: 10,
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (weight) {
+                                        return weight.length == 0
+                                            ? 'Duration cannot be Empty'
+                                            : null;
+                                      },
+                                      onSaved: (String weight) {
+                                        weeks = double.parse(weight);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ))),
                   ),
-                  SizedBox(
-                      height: phoneHeight / 6.77,
-                      width: phoneWidth / 3.409,
-                      child: Image.asset('assets/yoga.png')),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                      height: phoneHeight / 2.9,
-                      width: phoneWidth / 1.34,
-                      child: Form(
-                          autovalidate: _autoValidate,
-                          key: _formkeyGoal,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 30),
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      labelText: 'Set Your Taget Weight',
-                                      labelStyle: labeltxt,
-                                      suffix: SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: OutlineButton(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  Choose_2Dialog(
-                                                title: 'Choose units',
-                                                choice1: 'kg',
-                                                choice2: 'lbs',
-                                              ),
-                                            );
-                                          },
-                                          padding: EdgeInsets.all(0),
-                                          disabledBorderColor:
-                                              Color(0xFF00CDAC),
-                                          child: Text(
-                                            'kg',
-                                            style: TextStyle(
-                                                color: Color(0xFF00CDAC),
-                                                fontSize: 10,
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    validator: (weight) {
-                                      return weight.length == 0
-                                          ? 'Weight cannot be Zero'
-                                          : null;
-                                    },
-                                    onSaved: (String weight) {
-                                      targetWeight = double.parse(weight);
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      labelText: 'Set Your Taget Duration',
-                                      labelStyle: labeltxt,
-                                      suffix: SizedBox(
-                                        height: 24,
-                                        width: 46,
-                                        child: OutlineButton(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  Choose_2Dialog(
-                                                title: 'Choose units',
-                                                choice1: 'weeks',
-                                                choice2: 'Months',
-                                              ),
-                                            );
-                                          },
-                                          padding: EdgeInsets.all(0),
-                                          disabledBorderColor:
-                                              Color(0xFF00CDAC),
-                                          child: Text(
-                                            'weeks',
-                                            style: TextStyle(
-                                                color: Color(0xFF00CDAC),
-                                                fontSize: 10,
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    validator: (weight) {
-                                      return weight.length == 0
-                                          ? 'Duration cannot be Empty'
-                                          : null;
-                                    },
-                                    onSaved: (String weight) {
-                                      weeks = double.parse(weight);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))),
                 ),
-              ),
-              MaterialButton(
-                elevation: 0.5,
-                child: Text(
-                  'Save',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500),
+                MaterialButton(
+                  elevation: 0.5,
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  onPressed: () {
+                    autoval();
+                    print(registereduser.uid);
+                  },
+                  height: phoneHeight / 13.54,
+                  minWidth: phoneWidth / 1.205,
+                  color: uiGreen,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                onPressed: () {
-                  autoval();
-                  print(registereduser.uid);
-                },
-                height: phoneHeight / 13.54,
-                minWidth: phoneWidth / 1.205,
-                color: uiGreen,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -253,25 +262,25 @@ class _Registration3State extends State<Registration3> {
     _formkeyGoal.currentState.save();
 
     try {
+      _spinner = true;
       await userDataHelpUsForm(uid: registereduser.uid)
           .updategoalData(targetWeight, weeks, widget.goalValue)
-          .whenComplete(
-            () => Navigator.push(
-              context,
-              ScaleRoute(
-                page: LastOnboarding(
-                  goalValue: widget.goalValue,
-                  bmiGoal: newBMI(),
-                  goalDuration: weeks,
-                  CurrentWeight: widget.weight,
-                  weeklygoal: widget.goalValue == 2
-                      ? (widget.weight - targetWeight) / 7
-                      : (targetWeight - widget.weight) / 7,
-                  dailyCalorieRequirement: dailycal(widget.goalValue),
-                ),
-              ),
-            ),
-          );
+          .whenComplete(() => _spinner = false);
+      Navigator.push(
+        context,
+        ScaleRoute(
+          page: LastOnboarding(
+            goalValue: widget.goalValue,
+            bmiGoal: newBMI(),
+            goalDuration: weeks,
+            CurrentWeight: widget.weight,
+            weeklygoal: widget.goalValue == 2
+                ? (widget.weight - targetWeight) / 7
+                : (targetWeight - widget.weight) / 7,
+            dailyCalorieRequirement: dailycal(widget.goalValue),
+          ),
+        ),
+      );
       print('succes');
     } catch (e) {
       print(e);

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vitally/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserBar extends StatefulWidget {
+  UserBar({@required this.uid});
+  final String uid;
+
   @override
   _UserBarState createState() => _UserBarState();
 }
@@ -69,44 +73,55 @@ class _UserBarState extends State<UserBar> {
       return weekday + date + '  ' + month;
     }
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(32, 62, 32, 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
-        boxShadow: [
-          BoxShadow(color: Colors.grey[400], blurRadius: 10, spreadRadius: 3)
-        ],
-        color: Colors.white,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.wb_sunny,
-                    color: uiGreen,
-                    size: 15,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(today(), style: _DateStyle),
-                  )
-                ],
-              ),
-              Text(
-                'Hi, Chari',
-                style: _nameStyle,
-              )
-            ],
-          ),
-          Image.asset('assets/DP.png')
-        ],
-      ),
-    );
+    return StreamBuilder(
+        stream: Firestore.instance.collection(widget.uid).snapshots(),
+        builder: (context, snapshot) {
+          String name = (snapshot.data.documents[2]['userName']) == null
+              ? 0
+              : (snapshot.data.documents[2]['userName']);
+          ;
+
+          return Container(
+            padding: EdgeInsets.fromLTRB(32, 62, 32, 24),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50)),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[400], blurRadius: 10, spreadRadius: 3)
+              ],
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.wb_sunny,
+                          color: uiGreen,
+                          size: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(today(), style: _DateStyle),
+                        )
+                      ],
+                    ),
+                    Text(
+                      'Hi, ' + name,
+                      style: _nameStyle,
+                    )
+                  ],
+                ),
+                Image.asset('assets/DP.png')
+              ],
+            ),
+          );
+        });
   }
 }

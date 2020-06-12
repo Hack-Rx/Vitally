@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vitally/onBoarding/onboarding.dart';
-import 'Login_SignUp/login.dart';
-import 'package:vitally/DashBoard/DashBoardLanding.dart';
+import 'root.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,13 +25,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Color(0xFF00CDAC),
-      ),
-      home: (initScreen == 0 || initScreen == null)
-          ? Onboarding()
-          : LandingDashBoard(),
-    );
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Color(0xFF00CDAC),
+        ),
+        home: (initScreen == 0 || initScreen == null)
+            ? Onboarding()
+            : RootPage());
   }
 }
