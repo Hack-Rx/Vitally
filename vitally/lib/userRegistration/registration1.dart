@@ -7,8 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vitally/firebaseDataService/userdataformservice.dart';
 import 'package:vitally/userRegistration/gettoknowyourself.dart';
 
-//TODO: Gender Switch, Daily activity and storing this data to the cloud upon submitting so this data would be available in next pages
-
 const dialogtitle = TextStyle(
     color: Colors.black,
     fontSize: 30,
@@ -35,7 +33,6 @@ class HelpUsForm extends StatefulWidget {
 class _HelpUsFormState extends State<HelpUsForm> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrentUser();
   }

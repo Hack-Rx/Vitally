@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vitally/DashBoard/Home/UserBar.dart';
 import 'package:vitally/DashBoard/Home/DailyCalorieMonitor.dart';
 import 'package:vitally/DashBoard/Home/WaterIntakeMonitor.dart';
+import 'package:vitally/DashBoard/Home/SleepCycleMonitor.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({@required this.uid});
@@ -34,11 +35,13 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 6,
           ),
-          WaterIntake(),
+          WaterIntake(
+            uid: widget.uid,
+          ),
           SizedBox(
             height: 6,
           ),
-          WaterIntake()
+          SleepCycle()
         ]),
       );
     } catch (e) {

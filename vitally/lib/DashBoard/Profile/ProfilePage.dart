@@ -1,52 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:vitally/pageTransitions/pagetransition.dart';
-import 'package:vitally/Login_SignUp/login.dart';
+import 'package:vitally/DashBoard/Profile/profileScreen/graph.dart';
+import 'package:vitally/constants.dart';
+import 'package:vitally/DashBoard/Profile/profileScreen/logoutText.dart';
+import 'package:vitally/DashBoard/Profile/profileScreen/basicInfo.dart';
+import 'package:vitally/DashBoard/Profile/profileScreen/banner1.dart';
+import 'package:vitally/DashBoard/Profile/profileScreen/banner2.dart';
+import 'package:vitally/DashBoard/Profile/profileScreen/banner4.dart';
 
 class ProfilePage extends StatefulWidget {
+  ProfilePage({@required this.uid});
+  final String uid;
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _spinner = false;
-
-  final _auth = FirebaseAuth.instance;
-
-  final _googleSignIn = GoogleSignIn();
-
-  void singOutGoogle() async {
-    setState(() {
-      _spinner = true;
-    });
-    await _auth.signOut();
-    await _googleSignIn.signOut().whenComplete(() => _spinner = false);
-
-    Navigator.push(
-      context,
-      EnterExitRoute(enterPage: UserLoginPage(), exitPage: ProfilePage()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-        body: SafeArea(
-      child: ModalProgressHUD(
-        inAsyncCall: _spinner,
-        child: Center(
-          child: RaisedButton(
-            child: Text(' Logout'),
-            onPressed: () {
-              setState(() {
-                singOutGoogle();
-              });
-            },
-          ),
-        ),
-      ),
-    ));
+        backgroundColor: uiGreen,
+        body: Column(
+          children: <Widget>[
+            SizedBox(height: 70),
+            Expanded(
+              child: Container(
+                width: width,
+                decoration: BoxDecoration(
+                    color: Color(0xFFEEEEEF),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(35),
+                        topLeft: Radius.circular(35))),
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 15),
+                    BasicInfo(
+                      uid: widget.uid,
+                    ),
+                    Banner1(
+                      uid: widget.uid,
+                    ),
+                    Banner2(
+                      uid: widget.uid,
+                    ),
+                    SizedBox(height: 10),
+                    Banner4(
+                      uid: widget.uid,
+                    ),
+                    GraphData(),
+                    LogoutText(),
+                  ],
+                )),
+              ),
+            )
+          ],
+        ));
   }
 }

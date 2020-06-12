@@ -76,13 +76,12 @@ class _UserBarState extends State<UserBar> {
     return StreamBuilder(
         stream: Firestore.instance.collection(widget.uid).snapshots(),
         builder: (context, snapshot) {
-          String name = (snapshot.data.documents[2]['userName']) == null
+          String name = (snapshot.data.documents[3]['userName']) == null
               ? 0
-              : (snapshot.data.documents[2]['userName']);
-          ;
+              : (snapshot.data.documents[3]['userName']);
 
           return Container(
-            padding: EdgeInsets.fromLTRB(32, 62, 32, 24),
+            padding: EdgeInsets.fromLTRB(32, 52, 32, 24),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(50),
@@ -113,7 +112,7 @@ class _UserBarState extends State<UserBar> {
                       ],
                     ),
                     Text(
-                      'Hi, ' + name,
+                      'Hi, ' + name.split(" ")[0].toString(),
                       style: _nameStyle,
                     )
                   ],

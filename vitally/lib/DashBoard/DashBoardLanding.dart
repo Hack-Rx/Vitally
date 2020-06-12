@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vitally/constants.dart';
 import 'package:vitally/DashBoard/Home/Home.dart';
@@ -5,6 +6,8 @@ import 'package:vitally/DashBoard/Home/Home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'package:vitally/DashBoard/Profile/ProfilePage.dart';
+import 'package:vitally/DashBoard/BotNav_3/HealthLog.dart';
+import 'package:vitally/DashBoard/History/history.dart';
 
 var bottomNavTextStyle = TextStyle(
     color: uiBlue,
@@ -30,9 +33,11 @@ class _LandingDashBoardState extends State<LandingDashBoard> {
       HomePage(
         uid: useruid,
       ),
-      Text('History'),
-      Text('BottomNav3'),
-      ProfilePage(),
+      History(uid: widget.uid),
+      HealthLogs(uid: widget.uid),
+      ProfilePage(
+        uid: widget.uid,
+      ),
     ];
     bool _spinner = false;
     return Scaffold(
@@ -53,24 +58,25 @@ class _LandingDashBoardState extends State<LandingDashBoard> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: uiBlue,
-            ),
+            icon: Container(
+                height: 27, width: 28, child: Image.asset('assets/Home.png')),
             title: Text(
               '.',
               style: bottomNavTextStyle,
             ),
-            activeIcon: Text(
-              'Home',
-              style: bottomNavTextStyle,
+            activeIcon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Home',
+                  style: bottomNavTextStyle,
+                ),
+              ],
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.equalizer,
-              color: uiBlue,
-            ),
+            icon: Container(
+                height: 25, width: 25, child: Image.asset('assets/Stats.png')),
             title: Text(
               '.',
               style: bottomNavTextStyle,
@@ -81,24 +87,24 @@ class _LandingDashBoardState extends State<LandingDashBoard> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.content_paste,
-              color: uiBlue,
-            ),
+            icon: Container(
+                height: 25,
+                width: 25,
+                child: Image.asset('assets/Clipboard (1).png')),
             title: Text(
               '.',
               style: bottomNavTextStyle,
             ),
             activeIcon: Text(
-              '--',
+              'Health Log',
               style: bottomNavTextStyle,
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_outline,
-              color: uiBlue,
-            ),
+            icon: Container(
+                height: 27,
+                width: 27,
+                child: Image.asset('assets/Profile.png')),
             title: Text(
               '.',
               style: bottomNavTextStyle,
