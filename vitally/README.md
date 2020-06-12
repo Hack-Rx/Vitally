@@ -17,4 +17,5 @@ Requirements: Flutter SDK/Android Studio(-or VS Code) installed in the System
 #### Step 4: Fill In all the details post sign up
 #### Step 5: Go along with the app flow.
 #### Step 6: If you close the app, You will be logged out (Will be working on this in the future versions), please login again.
-#### Step 7: Contact the Dev team if you are facing issues
+
+Contact the Dev team if you are facing issues
