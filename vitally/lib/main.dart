@@ -11,7 +11,7 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   initScreen = await prefs.getInt("initScreen");
   await prefs.setInt(
-      "initScreen", 0); //TODO: Change the initScreen Value to 1 later
+      "initScreen", 1); //TODO: Change the initScreen Value to 1 later
   print('initScreen $initScreen');
   runApp(MyApp());
 }
@@ -29,7 +29,9 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Color(0xFF00CDAC),
       ),
-      home: (initScreen == 0 || initScreen == null) ? Onboarding() : Login(),
+      home: (initScreen == 0 || initScreen == null)
+          ? Onboarding()
+          : UserLoginPage(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'pagetransition.dart';
 
 const bodytxt = TextStyle(
     color: Colors.white,
@@ -34,6 +35,9 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    final phoneWidth = MediaQuery.of(context).size.width;
+    final phoneHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Uigrn,
       body: Center(
@@ -41,7 +45,7 @@ class _OnboardingState extends State<Onboarding> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: 600,
+              height: phoneHeight / 1.354,
               child: PageView(
                 controller: controller,
                 scrollDirection: Axis.horizontal,
@@ -51,10 +55,10 @@ class _OnboardingState extends State<Onboarding> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Padding(
-                          padding:
-                              const EdgeInsets.only(top: 150.0, bottom: 50),
+                          padding: const EdgeInsets.only(top: 150, bottom: 50),
                           child: Container(
-                              height: 180, child: Image.asset('assets/1.png')),
+                              height: phoneHeight / 4.52,
+                              child: Image.asset('assets/1.png')),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 25, bottom: 15),
@@ -65,7 +69,7 @@ class _OnboardingState extends State<Onboarding> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 100,
+                          height: phoneHeight / 8.12,
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 5, left: 15.0, right: 15, bottom: 25),
@@ -87,7 +91,8 @@ class _OnboardingState extends State<Onboarding> {
                           padding:
                               const EdgeInsets.only(top: 150.0, bottom: 50),
                           child: Container(
-                              height: 180, child: Image.asset('assets/2.png')),
+                              height: phoneHeight / 4.52,
+                              child: Image.asset('assets/2.png')),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 25, bottom: 15),
@@ -98,7 +103,7 @@ class _OnboardingState extends State<Onboarding> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 100,
+                          height: phoneHeight / 8.12,
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 5, left: 15.0, right: 15, bottom: 25),
@@ -120,7 +125,8 @@ class _OnboardingState extends State<Onboarding> {
                           padding:
                               const EdgeInsets.only(top: 150.0, bottom: 50),
                           child: Container(
-                              height: 180, child: Image.asset('assets/3.png')),
+                              height: phoneHeight / 4.52,
+                              child: Image.asset('assets/3.png')),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 25, bottom: 15),
@@ -131,7 +137,7 @@ class _OnboardingState extends State<Onboarding> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 100,
+                          height: phoneHeight / 8.12,
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 5, left: 15.0, right: 15, bottom: 25),
@@ -152,15 +158,16 @@ class _OnboardingState extends State<Onboarding> {
               child: SmoothPageIndicator(
                 controller: controller,
                 count: 3,
-                effect: WormEffect(),
+                effect:
+                    WormEffect(dotColor: Colors.white, activeDotColor: Uiblu),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 90),
               child: MaterialButton(
                 child: Text('Get Started', style: buttontxt),
-                height: 60,
-                minWidth: 311,
+                height: phoneHeight / 13.54,
+                minWidth: phoneWidth / 1.20,
                 color: Uiblu,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
@@ -170,7 +177,7 @@ class _OnboardingState extends State<Onboarding> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return Login();
+                        return UserLoginPage();
                       },
                     ),
                   );
@@ -193,13 +200,7 @@ class _OnboardingState extends State<Onboarding> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return Login();
-                          },
-                        ),
-                      );
+                          context, ScaleRoute(page: UserLoginPage()));
                     },
                     child: Text(
                       'Login',
