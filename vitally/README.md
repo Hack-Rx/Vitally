@@ -20,6 +20,8 @@ Requirements: Flutter SDK/Android Studio(-or VS Code) installed in the System
 Contact the Dev team if you are facing issues
 
 ### App Walkthrough | 'Vitally'  
-#### >[Walkthrough](https://drive.google.com/drive/folders/1sK_HFA573VAZcRdjB2Y7cFifysrmugwH?usp=sharing)
+#### >[UI](https://www.figma.com/file/5N3RUxQ4JBH34GY2TCvCJF/Untitled?node-id=2%3A4)
+#### >[Walkthrough](https://www.figma.com/proto/5N3RUxQ4JBH34GY2TCvCJF/Vitally?node-id=0%3A1&scaling=scale-down)
+#### >[pitchdeck](https://www.canva.com/design/DAD7qG8LJM0/ZkbqrNKJrmANfU5KSJjSeA/view?utm_content=DAD7qG8LJM0&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu)
 
 
